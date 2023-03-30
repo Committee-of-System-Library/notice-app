@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:knu_notice/src/components/message_popup.dart';
 import 'package:knu_notice/src/pages/like.dart';
 import 'package:knu_notice/src/pages/more.dart';
 import 'package:knu_notice/src/pages/notice.dart';
@@ -102,14 +105,26 @@ class _AppState extends State<App> {
   }
 
   Future<bool> willPopAction() async {
-    if (_bottomHistory.length > 1) {
-      _bottomHistory.removeLast();
-      var index = _bottomHistory.last;
-      changeBottomNav(index, hasGesture: false);
-      print(_bottomHistory);
-      return false;
+    if(_bottomHistory.length==1) {
+      showDialog(
+        context: context,
+        builder: (context) => MessagePopup(
+          message: '종료하시겠습니까?',
+          okCallback: (){
+            exit(0);
+          },
+          cancelCallback: Navigator.of(context).pop,
+          title: '시스템',
+        ),
+      );
+      print('exit!');
+      return true;
     }
 
-    return true;
+    _bottomHistory.removeLast();
+    var index = _bottomHistory.last;
+    changeBottomNav(index,hasGesture: false);
+    print(_bottomHistory);
+    return false;
   }
 }
